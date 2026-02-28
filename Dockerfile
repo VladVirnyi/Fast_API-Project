@@ -1,11 +1,16 @@
-
 FROM python:3.11-slim
+
+ENV POETRY_VERSION=2.0.1 \
+    POETRY_VIRTUALENVS_CREATE=false \
+    PYTHONUNBUFFERED=1
 
 WORKDIR /code
 
-COPY requirements.txt .
+RUN pip install "poetry==$POETRY_VERSION"
 
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml poetry.lock* ./
+
+RUN poetry install --no-interaction --no-ansi --no-root
 
 COPY . .
 
