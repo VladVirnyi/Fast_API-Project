@@ -1,32 +1,44 @@
 version: '3.8'
 
 services:
-  db:
-    image: postgres:15
-    container_name: postgres_db
+  postgres:
+    image: postgres:15-alpine
+    container_name: fastapi_postgres
     environment:
-      POSTGRES_USER: user
-      POSTGRES_PASSWORD: password
-      POSTGRES_DB: fastapi_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: fastapi_lab4_db
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - fastapi_network
 
-  web:
+  fastapi:
     build: .
     container_name: fastapi_app
+    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+    environment:
+      DATABASE_URL: postgresql+asyncpg://postgres:postgres@postgres:5432/fastapi_lab4_db
     ports:
       - "8000:8000"
-    # --- ОСЬ ТУТ ПОЧИНАЮТЬСЯ ЗМІНИ ДЛЯ DEV ---
-    volumes:
-      - .:/code  # mount the current directory to /code in the container
-    environment:
-      - DATABASE_URL=postgresql://user:password@db:5432/fastapi_db
     depends_on:
-      - db
-    # autoreload --reload
-    command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+      postgres:
+        condition: service_healthy
+    volumes:
+      - .:/app
+    networks:
+      - fastapi_network
 
 volumes:
   postgres_data:
+
+networks:
+  fastapi_network:
+    driver: bridge
