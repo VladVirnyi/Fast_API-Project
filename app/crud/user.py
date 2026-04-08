@@ -1,8 +1,6 @@
 """CRUD operations for User."""
 
-import hashlib
-import hmac
-import os
+from passlib.context import CryptContext
 
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
@@ -11,20 +9,17 @@ from app.models import User
 from app.schemas.user import UserCreate, UserUpdate
 
 
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+
+
 def hash_password(password: str) -> str:
     """Hashes a password."""
-    salt = os.urandom(16)
-    derived_key = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, 390000)
-    return f"{salt.hex()}:{derived_key.hex()}"
+    return pwd_context.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
     """Verifies a password."""
-    salt_hex, hash_hex = hashed_password.split(":", 1)
-    salt = bytes.fromhex(salt_hex)
-    expected_hash = bytes.fromhex(hash_hex)
-    candidate_hash = hashlib.pbkdf2_hmac("sha256", plain_password.encode("utf-8"), salt, 390000)
-    return hmac.compare_digest(expected_hash, candidate_hash)
+    return pwd_context.verify(plain_password, hashed_password)
 
 
 async def create_user(db: AsyncSession, user: UserCreate) -> User:

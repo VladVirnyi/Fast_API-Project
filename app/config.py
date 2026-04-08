@@ -31,6 +31,14 @@ class Settings(BaseSettings):
     
     # Session
     session_expire_minutes: int = 30
+
+    # JWT
+    jwt_secret_key: str = "change-this-secret-key"
+    jwt_algorithm: str = "HS256"
+    access_token_expire_minutes: int = 30
+
+    # Auth cookie
+    auth_cookie_name: str = "access_token"
     
 @lru_cache()
 def get_settings() -> Settings:

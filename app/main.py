@@ -3,7 +3,7 @@
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
 from app.config import get_settings
-from app.routers import user, category, product, order, profile
+from app.routers import user, category, product, order, profile, auth
 import uvicorn
 
 settings = get_settings()
@@ -34,6 +34,7 @@ app.include_router(category.router)
 app.include_router(product.router)
 app.include_router(order.router)
 app.include_router(profile.router)
+app.include_router(auth.router)
 
 
 @app.get("/")
