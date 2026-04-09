@@ -60,6 +60,6 @@ async def delete_profile(db: AsyncSession, profile_id: int) -> bool:
     if not db_profile:
         return False
     
-    db.delete(db_profile)
+    await db.delete(db_profile)
     await db.commit()
     return True

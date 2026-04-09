@@ -61,6 +61,6 @@ async def delete_category(db: AsyncSession, category_id: int) -> bool:
     if not db_category:
         return False
     
-    db.delete(db_category)
+    await db.delete(db_category)
     await db.commit()
     return True

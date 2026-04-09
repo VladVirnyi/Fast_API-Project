@@ -33,8 +33,10 @@ async def create_user(db: AsyncSession, user: UserCreate) -> User:
     )
     db.add(db_user)
     await db.commit()
-    await db.refresh(db_user)
-    return db_user
+    result = await db.execute(
+        select(User).options(selectinload(User.profile)).filter(User.id == db_user.id)
+    )
+    return result.scalars().first()
 
 
 async def get_user_by_id(db: AsyncSession, user_id: int) -> User | None:
@@ -90,6 +92,6 @@ async def delete_user(db: AsyncSession, user_id: int) -> bool:
     if not db_user:
         return False
     
-    db.delete(db_user)
+    await db.delete(db_user)
     await db.commit()
     return True
