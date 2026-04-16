@@ -6,4 +6,8 @@ pydantic-settings
 asyncpg
 python-dotenv
 passlib[bcrypt]
+bcrypt==4.0.1
 python-jose[cryptography]
+pytest
+pytest-asyncio
+httpx

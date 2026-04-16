@@ -38,8 +38,7 @@ async def create_order(db: AsyncSession, order: OrderCreate) -> Order:
     
     db_order.total_amount = total_amount
     await db.commit()
-    await db.refresh(db_order)
-    return db_order
+    return await get_order_by_id(db, db_order.id)
 
 
 async def get_order_by_id(db: AsyncSession, order_id: int) -> Order | None:
@@ -94,7 +93,7 @@ async def delete_order(db: AsyncSession, order_id: int) -> bool:
     if not db_order:
         return False
     
-    db.delete(db_order)
+    await db.delete(db_order)
     await db.commit()
     return True
 
@@ -143,6 +142,6 @@ async def remove_order_item(db: AsyncSession, order_item_id: int) -> bool:
     if order:
         order.total_amount -= order_item.total_price
     
-    db.delete(order_item)
+    await db.delete(order_item)
     await db.commit()
     return True
