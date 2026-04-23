@@ -15,7 +15,7 @@ import sys
 sys.path.insert(0, str(Path(__file__).parent.parent))
 
 # Import config and models
-from app.config import get_settings
+from app.core.config import get_settings
 from app.models import Base
 
 # This is the Config object that interprets the Alembic config file

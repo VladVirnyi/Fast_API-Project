@@ -2,8 +2,8 @@
 
 from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.config import get_settings
-from app.routers import user, category, product, order, profile, auth
+from app.core.config import get_settings
+from app.routers import auth, category, order, product, profile, user
 import uvicorn
 
 settings = get_settings()

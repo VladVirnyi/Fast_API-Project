@@ -6,8 +6,8 @@ from passlib.context import CryptContext
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.config import get_settings
-from app.database import get_db
+from app.core.config import get_settings
+from app.db.session import get_db
 from app.models import Order, Profile, User
 from app.schemas.auth import (
     LoginRequest,

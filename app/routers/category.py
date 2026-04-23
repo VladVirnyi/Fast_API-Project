@@ -3,7 +3,7 @@
 from fastapi import APIRouter, HTTPException, status, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.schemas.category import Category, CategoryCreate, CategoryUpdate
-from app.database import get_db
+from app.db.session import get_db
 from app.crud import category as category_crud
 
 router = APIRouter(prefix="/categories", tags=["Categories"])
