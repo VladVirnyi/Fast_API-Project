@@ -13,7 +13,7 @@ from sqlalchemy import select, func
 # Add project root to path
 sys.path.insert(0, str(Path(__file__).parent))
 
-from app.database import AsyncSessionLocal
+from app.db.session import AsyncSessionLocal
 from app.crud import user as user_crud, category as category_crud, product as product_crud, order as order_crud
 from app.crud import profile as profile_crud
 from app.schemas.user import UserCreate

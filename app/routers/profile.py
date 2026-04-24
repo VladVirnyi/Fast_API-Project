@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.crud import profile as profile_crud
-from app.database import get_db
+from app.db.session import get_db
 from app.schemas.profile import Profile, ProfileCreate, ProfileUpdate
 
 router = APIRouter(prefix="/profiles", tags=["Profiles"])

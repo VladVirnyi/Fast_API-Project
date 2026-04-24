@@ -7,7 +7,7 @@ from sqlalchemy import text
 from sqlalchemy.pool import NullPool
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
-from app.database import Base, get_db
+from app.db.session import Base, get_db
 from app.main import app
 
 
