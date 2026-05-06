@@ -1,12 +1,23 @@
 """API routers for order management."""
 
 from fastapi import APIRouter, HTTPException, status, Depends, Query
+from prometheus_client import Counter, Gauge
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.schemas.order import Order, OrderCreate, OrderUpdate, OrderItemCreate
 from app.db.session import get_db
 from app.crud import order as order_crud
 
 router = APIRouter(prefix="/orders", tags=["Orders"])
+
+ORDER_CREATE_TOTAL = Counter(
+    "app_order_create_total",
+    "Total number of created orders",
+)
+ORDER_TOTAL_AMOUNT = Gauge(
+    "app_order_total_amount",
+    "Total amount summed across created orders",
+)
 
 
 @router.get("/", response_model=list[Order])
@@ -33,7 +44,10 @@ async def create_order(
 ):
     """Creates a new order."""
     try:
-        return await order_crud.create_order(db, order_data)
+        created_order = await order_crud.create_order(db, order_data)
+        ORDER_CREATE_TOTAL.inc()
+        ORDER_TOTAL_AMOUNT.inc(created_order.total_amount)
+        return created_order
     except ValueError as e:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
