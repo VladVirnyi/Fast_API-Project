@@ -1,8 +1,10 @@
 fastapi
 uvicorn[standard]
+pydantic[email]
 sqlalchemy[asyncio]
 alembic
 pydantic-settings
+psycopg[asyncpg]
 asyncpg
 python-dotenv
 passlib[bcrypt]
@@ -11,3 +13,5 @@ python-jose[cryptography]
 pytest
 pytest-asyncio
 httpx
+prometheus-fastapi-instrumentator
+prometheus-client
